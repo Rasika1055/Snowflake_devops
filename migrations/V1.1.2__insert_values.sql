@@ -1,0 +1,1 @@
+INSERT INTO SFDB.DEMO.USER values ("Rasika","Deshmukh"),("Aryan","Deshmukh"),("Siddhi","Jagtap");
