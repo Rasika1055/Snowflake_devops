@@ -1,1 +1,5 @@
-INSERT INTO SFDB.DEMO.USER values ("Rasika","Deshmukh"),("Aryan","Deshmukh"),("Siddhi","Jagtap");
+INSERT INTO SFDB.DEMO.USER values ("Gauri","Deshmukh");
+
+CREATE VIEW USER_VIEW (FIRST_NAME,LAST_NAME)
+AS SELECT * FROM SFDB.DEMO.USER;
+
