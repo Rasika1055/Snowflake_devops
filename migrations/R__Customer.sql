@@ -2,7 +2,8 @@ USE SCHEMA PUBLIC;
 
 CREATE TABLE CUSTOMER_T
 (
-    ID INT
+    ID INT,
+    name varchar
 );
 
 
