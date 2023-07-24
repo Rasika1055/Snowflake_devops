@@ -7,3 +7,4 @@ CREATE or replace TABLE CUSTOMER_T
 );
 
 
+drop table CUSTOMER_T;
