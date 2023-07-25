@@ -56,15 +56,6 @@ jobs:
           run: |  
             echo "Please cherry pick commits ${{ secrets.COMMIT_SHAS }} to the ${{ env.PRD }} environment."
             echo "These commits fix a bug that is causing the application to crash."
-        - name: Wait for Cherry Picking Approval
-          run: |
-            echo "Waiting for cherry picking approval..."
-            while true; do
-              if [[ -f .cherry-picked ]]; then
-                break
-                fi
-              sleep 10
-            done
         - name: Cherry Pick Commits
           run: |
             git cherry-pick ${{ secrets.COMMIT_SHAS }}
