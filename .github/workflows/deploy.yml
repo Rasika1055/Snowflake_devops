@@ -1,5 +1,6 @@
 name: snowflake-devops-demo
 
+
 # Controls when the action will run. 
 on:
   push:
@@ -13,23 +14,6 @@ on:
   workflow_dispatch:
 
 jobs:
-  cherry_pick_release_v1_0:
-    runs-on: ubuntu-latest
-    name: Cherry pick into release-v1.0
-    if: ${{ contains(github.event.push_request.labels.*.name, 'release-v1.0') && github.event.push_request.merged == true }}
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
-      - name: Cherry pick into release-v1.0
-        uses: carloscastrojumo/github-cherry-pick-action@v1.0.1
-        with:
-          branch: release-v1.0
-          labels: |
-            cherry-pick
-          reviewers: |
-            aReviewerUser
   deploy-to_dev:
     runs-on: ubuntu-latest
 
@@ -63,9 +47,29 @@ jobs:
           
           echo "Step 2: Running schemachange"
           schemachange -f $GITHUB_WORKSPACE/migrations -a $SF_ACCOUNT -u $SF_USERNAME -r $SF_ROLE -w $SF_WAREHOUSE -d $SF_DATABASE -c $SF_DATABASE.SCHEMACHANGE.CHANGE_HISTORY --create-change-history-table
+  cherry-pick:
+    runs-on: ubuntu-latest
+    steps:
+        - uses: actions/checkout@v2
+        - name: Request Cherry Picking
+          run: |
+            echo "Please cherry pick commits ${{ secrets.COMMIT_SHAS }} to the ${{ env.PRD }} environment."
+            echo "These commits fix a bug that is causing the application to crash."
+        - name: Wait for Cherry Picking Approval
+          run: |
+            echo "Waiting for cherry picking approval..."
+            while true; do
+              if [[ -f .cherry-picked ]]; then
+                break
+                fi
+              sleep 10
+            done
+        - name: Cherry Pick Commits
+          run: |
+            git cherry-pick ${{ secrets.COMMIT_SHAS }}
   deploy-to_prd:
     runs-on: ubuntu-latest
-    needs: deploy-to_dev
+    needs: cherry-pick
     environment: PRD
 
     steps:
