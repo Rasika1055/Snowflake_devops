@@ -52,13 +52,10 @@ jobs:
     needs: deploy-to_dev
     steps:
         - uses: actions/checkout@v2
-        - name: Request Cherry Picking
-          run: |  
-            echo "Please cherry pick commits ${{ secrets.CHERRY_PICKER_ID }} to the ${{ env.PRD }} environment."
-            echo "These commits fix a bug that is causing the application to crash."
-        - name: Cherry Pick Commits
+        - name: Cherry pick the commit to PRD
           run: |
-            git cherry-pick ${{ secrets.CHERRY_PICKER_ID }}
+            git checkout main
+            git cherry-pick $CHERRY_PICKER_ID
   deploy-to_prd:
     runs-on: ubuntu-latest
     needs: cherry-pick
