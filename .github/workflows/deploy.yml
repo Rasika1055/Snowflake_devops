@@ -13,6 +13,23 @@ on:
   workflow_dispatch:
 
 jobs:
+  cherry_pick_release_v1_0:
+    runs-on: ubuntu-latest
+    name: Cherry pick into release-v1.0
+    if: ${{ contains(github.event.push_request.labels.*.name, 'release-v1.0') && github.event.push_request.merged == true }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Cherry pick into release-v1.0
+        uses: carloscastrojumo/github-cherry-pick-action@v1.0.1
+        with:
+          branch: release-v1.0
+          labels: |
+            cherry-pick
+          reviewers: |
+            aReviewerUser
   deploy-to_dev:
     runs-on: ubuntu-latest
 
