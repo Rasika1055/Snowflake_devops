@@ -49,10 +49,11 @@ jobs:
           schemachange -f $GITHUB_WORKSPACE/migrations -a $SF_ACCOUNT -u $SF_USERNAME -r $SF_ROLE -w $SF_WAREHOUSE -d $SF_DATABASE -c $SF_DATABASE.SCHEMACHANGE.CHANGE_HISTORY --create-change-history-table
   cherry-pick:
     runs-on: ubuntu-latest
+    needs: deploy-to_dev
     steps:
         - uses: actions/checkout@v2
         - name: Request Cherry Picking
-          run: |
+          run: |  
             echo "Please cherry pick commits ${{ secrets.COMMIT_SHAS }} to the ${{ env.PRD }} environment."
             echo "These commits fix a bug that is causing the application to crash."
         - name: Wait for Cherry Picking Approval
